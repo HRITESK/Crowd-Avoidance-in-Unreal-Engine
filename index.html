@@ -305,6 +305,117 @@
       position: absolute; font-size: 9px; letter-spacing: 0.1em;
       color: var(--dim); text-transform: uppercase;
     }
+
+    /* ── MOBILE ── */
+    @media (max-width: 640px) {
+
+      /* Globals */
+      .wrap { padding: 0 16px; }
+      body { font-size: 12px; }
+
+      /* Nav — collapse to logo + hamburger feel */
+      .nav-inner { padding: 0 16px; height: auto; flex-wrap: wrap; gap: 0; }
+      .nav-logo { font-size: 11px; padding: 10px 0; }
+      .nav-links {
+        width: 100%; overflow-x: auto; gap: 4px;
+        padding: 6px 0 8px; border-top: 1px solid var(--border);
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+      }
+      .nav-links::-webkit-scrollbar { display: none; }
+      .nav-btn { font-size: 9px; padding: 5px 10px; white-space: nowrap; }
+      .nav-li { display: none; } /* hide linkedin in nav on mobile, it's in footer */
+
+      /* Hero */
+      .hero { padding: 110px 0 40px; }
+      .hero-grid { grid-template-columns: 1fr; gap: 28px; }
+      .hero-meta { font-size: 9px; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+      h1 { font-size: clamp(32px, 10vw, 52px); margin-bottom: 20px; }
+      .hero-sub { font-size: 12px; margin-bottom: 20px; }
+      .hero-tags { gap: 5px; }
+      .tag { font-size: 9px; padding: 3px 8px; }
+
+      /* Hero panel — horizontal scroll table feel */
+      .hero-panel { font-size: 10px; }
+      .panel-row { padding: 8px 12px; }
+      .panel-key { font-size: 9px; }
+      .panel-val { font-size: 10px; }
+
+      /* Sections */
+      section { padding: 48px 0; }
+      .section-header { gap: 10px; margin-bottom: 28px; }
+      .section-header h2 { font-size: 18px; }
+      .section-num { font-size: 9px; }
+
+      /* Videos — always single column on mobile */
+      .video-grid-3,
+      .video-grid-1,
+      div[style*="grid-template-columns:1fr 1fr"] {
+        grid-template-columns: 1fr !important;
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 16px !important;
+      }
+
+      /* System info grid */
+      .sys-grid { grid-template-columns: 1fr; gap: 24px; }
+      .sys-title { font-size: 16px; }
+      .sys-desc { font-size: 12px; }
+      .feat-list li { font-size: 11px; padding: 8px 10px; }
+
+      /* Compare table — horizontal scroll */
+      .cmp-table { font-size: 11px; display: block; overflow-x: auto; white-space: nowrap; -webkit-overflow-scrolling: touch; }
+      .cmp-table th, .cmp-table td { padding: 9px 12px; font-size: 10px; }
+
+      /* Docs — stack sidebar above content */
+      .doc-layout { grid-template-columns: 1fr; gap: 24px; }
+      .doc-sidebar { position: static; }
+      .doc-nav {
+        flex-direction: row; flex-wrap: wrap; gap: 4px;
+        border-left: none; border-top: 2px solid var(--border2);
+        padding-top: 10px;
+      }
+      .doc-nav-btn {
+        border-left: none; border-bottom: 2px solid transparent;
+        padding: 5px 10px; font-size: 10px;
+        background: var(--surface); border-radius: 0;
+      }
+      .doc-nav-btn.on {
+        border-left: none; border-bottom: 2px solid var(--acc-doc);
+        background: rgba(122,74,16,0.08);
+      }
+      .doc-body { gap: 36px; }
+      .doc-sec-title { font-size: 15px; gap: 8px; }
+      .doc-p { font-size: 11px; }
+
+      /* Math boxes — prevent overflow */
+      .math-box { padding: 14px 14px; }
+      .math-f {
+        font-size: 11px; word-break: break-all;
+        overflow-wrap: anywhere; white-space: normal;
+      }
+      .math-note { font-size: 10px; }
+      .math-lbl { font-size: 9px; }
+
+      /* Callouts */
+      .callout { font-size: 11px; padding: 12px 14px; }
+
+      /* Footer */
+      .footer-inner { flex-direction: column; gap: 8px; text-align: center; }
+      footer p { font-size: 11px; }
+      .footer-ref { display: none; }
+    }
+
+    /* Tablet tweaks */
+    @media (min-width: 641px) and (max-width: 900px) {
+      .wrap { padding: 0 24px; }
+      .nav-inner { padding: 0 24px; }
+      .nav-btn { font-size: 10px; padding: 5px 10px; }
+      .sys-grid { grid-template-columns: 1fr; gap: 28px; }
+      .doc-layout { grid-template-columns: 180px 1fr; gap: 28px; }
+      .math-f { font-size: 12px; word-break: break-word; white-space: normal; }
+      h1 { font-size: clamp(36px, 6vw, 60px); }
+    }
   </style>
 </head>
 <body>
@@ -312,7 +423,7 @@
 <!-- NAV -->
 <nav>
   <div class="nav-inner">
-    <a class="nav-logo" href="#">RITESH KASHYAP | Unreal Engine</a>
+    <a class="nav-logo" href="#">RITESH KASHYAP // UE5</a>
     <div class="nav-links">
       <button class="nav-btn nav-btn-cpp" onclick="go('cpp')">C++ System</button>
       <button class="nav-btn nav-btn-bp"  onclick="go('blueprint')">Blueprint</button>

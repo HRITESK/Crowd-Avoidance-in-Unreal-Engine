@@ -109,7 +109,7 @@
 
     h1 {
       font-family: 'Syne', sans-serif; font-weight: 800;
-      font-size: clamp(48px, 7vw, 88px); line-height: 0.9;
+      font-size: clamp(36px, 5.5vw, 72px); line-height: 1.0;
       letter-spacing: -0.04em; color: var(--text);
       margin-bottom: 32px;
     }
@@ -312,7 +312,7 @@
 <!-- NAV -->
 <nav>
   <div class="nav-inner">
-    <a class="nav-logo" href="#">HRITESH KASHYAP // UE5</a>
+    <a class="nav-logo" href="#">RITESH KASHYAP // UE5</a>
     <div class="nav-links">
       <button class="nav-btn nav-btn-cpp" onclick="go('cpp')">C++ System</button>
       <button class="nav-btn nav-btn-bp"  onclick="go('blueprint')">Blueprint</button>
@@ -336,7 +336,7 @@
 
     <div class="hero-grid">
       <div>
-        <h1>CROWD<br/><span class="outline">AVOID</span><br/>ANCE</h1>
+        <h1>CROWD <span class="outline">AVOID</span>ANCE</h1>
         <p class="hero-sub">Two implementations of a real-time crowd avoidance system built in UE5 — one engineered in pure C++ with spatial grid detection, probe-based collision awareness, and multi-state escape logic; one in Blueprint optimized for rapid iteration and designer accessibility.</p>
         <div class="hero-tags">
           <span class="tag">Unreal Engine 5</span>
@@ -358,7 +358,7 @@
         <div class="panel-row"><span class="panel-key">Debug System</span><span class="panel-val">Probe + Path Vis</span></div>
         <div class="panel-row"><span class="panel-key">State Machine</span><span class="panel-val">Confidence-Based</span></div>
         <div class="panel-row"><span class="panel-key">Escape Logic</span><span class="panel-val">Active</span></div>
-        <div class="panel-row"><span class="panel-key">Author</span><span class="panel-val">Hritesh Kashyap</span></div>
+        <div class="panel-row"><span class="panel-key">Author</span><span class="panel-val">Ritesh Kashyap</span></div>
       </div>
     </div>
   </div>
@@ -487,7 +487,7 @@
 
     <div class="doc-layout fu">
       <div class="doc-sidebar">
-        <div class="doc-sidebar-hd">// Contents</div>
+
         <div class="doc-nav">
           <button class="doc-nav-btn on"  onclick="dn(this,'d-ov')">Overview</button>
           <button class="doc-nav-btn"     onclick="dn(this,'d-sp')">Spatial Detection</button>
@@ -599,7 +599,7 @@
 <footer>
   <div class="wrap">
     <div class="footer-inner">
-      <p>Built by <a href="https://www.linkedin.com/in/hriteshkashyap/" target="_blank">Hritesh Kashyap</a> &nbsp;·&nbsp; Unreal Engine 5 &nbsp;·&nbsp; C++ &amp; Blueprint AI Systems</p>
+      <p>Built by <a href="https://www.linkedin.com/in/hriteshkashyap/" target="_blank">Ritesh Kashyap</a> &nbsp;·&nbsp; Unreal Engine 5 &nbsp;·&nbsp; C++ &amp; Blueprint AI Systems</p>
       <span class="footer-ref"></span>
     </div>
   </div>
@@ -620,10 +620,30 @@
     window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 88, behavior: 'smooth' });
   }
 
+  // Fade-up on scroll
   const obs = new IntersectionObserver(entries => {
     entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('on'); obs.unobserve(e.target); } });
   }, { threshold: 0.07 });
   document.querySelectorAll('.fu').forEach(el => obs.observe(el));
+
+  // Scroll-spy for doc sidebar
+  const docSections = ['d-ov','d-sp','d-pb','d-fo','d-pr','d-st','d-sk','d-bp'];
+  const docBtns = document.querySelectorAll('.doc-nav-btn');
+
+  function updateSidebar() {
+    const scrollY = window.scrollY;
+    let current = 0;
+    docSections.forEach((id, i) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const top = el.getBoundingClientRect().top + window.scrollY;
+      if (scrollY >= top - 140) current = i;
+    });
+    docBtns.forEach(b => b.classList.remove('on'));
+    if (docBtns[current]) docBtns[current].classList.add('on');
+  }
+
+  window.addEventListener('scroll', updateSidebar, { passive: true });
 </script>
 </body>
 </html>

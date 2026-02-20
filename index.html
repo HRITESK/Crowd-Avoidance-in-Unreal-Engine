@@ -353,7 +353,7 @@
         <div class="panel-row"><span class="panel-key">Project</span><span class="panel-val">CodeFundamentals</span></div>
         <div class="panel-row"><span class="panel-key">Engine</span><span class="panel-val">UE5</span></div>
         <div class="panel-row"><span class="panel-key">Implementations</span><span class="panel-val">2</span></div>
-        <div class="panel-row"><span class="panel-key">C++ Spatial Algo</span><span class="panel-val">Grid Hash O(1)</span></div>
+        <div class="panel-row"><span class="panel-key">C++ Detection</span><span class="panel-val">Collider-Driven Probes</span></div>
         <div class="panel-row"><span class="panel-key">Blueprint Algo</span><span class="panel-val">Overlap Query</span></div>
         <div class="panel-row"><span class="panel-key">Debug System</span><span class="panel-val">Probe + Path Vis</span></div>
         <div class="panel-row"><span class="panel-key">State Machine</span><span class="panel-val">Confidence-Based</span></div>
@@ -373,22 +373,15 @@
       <div class="section-line"></div>
     </div>
 
-    <div class="video-grid-3 fu">
+    <div class="video-grid-1 fu" style="max-width:100%; grid-template-columns:1fr 1fr; display:grid; gap:16px; margin-bottom:44px;">
       <div class="video-wrap">
-        <div class="video-label"><span class="dot" style="background:var(--acc-cpp)"></span>Gameplay Demo</div>
+        <div class="video-label"><span class="dot" style="background:var(--acc-cpp)"></span>C++ Demo</div>
         <div class="video-embed">
           <iframe src="https://www.youtube.com/embed/R_DG2QOsXr8" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
         </div>
       </div>
       <div class="video-wrap">
-        <div class="video-label"><span class="dot" style="background:var(--acc-cpp)"></span>System Demo</div>
-        <div class="video-embed">
-          <!-- Add second C++ video ID here if you have one, currently using same -->
-          <iframe src="https://www.youtube.com/embed/R_DG2QOsXr8" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
-        </div>
-      </div>
-      <div class="video-wrap">
-        <div class="video-label"><span class="dot" style="background:rgba(26,110,58,0.4)"></span>Debug View</div>
+        <div class="video-label"><span class="dot" style="background:rgba(26,110,58,0.4)"></span>Debug View — Probe Points + Desired Path</div>
         <div class="video-embed">
           <iframe src="https://www.youtube.com/embed/hUiIwY-eoPw" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
         </div>
@@ -403,7 +396,7 @@
       </div>
       <div>
         <ul class="feat-list">
-          <li><span class="feat-arrow cpp-c">→</span><span><strong>Grid-based spatial detection</strong> — flat O(1) neighbor query regardless of total crowd count</span></li>
+          <li><span class="feat-arrow cpp-c">→</span><span><strong>Collider-driven probe detection</strong> — each collider dynamically influences the agent's probe points, assembling spatial awareness fresh every tick</span></li>
           <li><span class="feat-arrow cpp-c">→</span><span><strong>Distributed probe points</strong> — radial samples detect colliders, each contributing weighted repulsion</span></li>
           <li><span class="feat-arrow cpp-c">→</span><span><strong>Desired path visualization</strong> — debug renders goal vector vs actual path, showing avoidance deflection live</span></li>
           <li><span class="feat-arrow cpp-c">→</span><span><strong>Anticipatory prediction</strong> — avoidance computed against projected future positions, not just current</span></li>
@@ -467,7 +460,7 @@
           <tr><th>Criterion</th><th>C++ Version</th><th>Blueprint Version</th></tr>
         </thead>
         <tbody>
-          <tr><td>Spatial lookup</td><td class="good">Grid-hashed O(1)</td><td class="mid">Linear overlap query</td></tr>
+          <tr><td>Spatial detection</td><td class="good">Collider-driven probe points</td><td class="mid">Direct overlap query</td></tr>
           <tr><td>Collision awareness</td><td class="good">Distributed probe points</td><td class="na">Not implemented</td></tr>
           <tr><td>Desired path debug</td><td class="good">Visualized per agent</td><td class="na">None</td></tr>
           <tr><td>State transitions</td><td class="good">Confidence-threshold</td><td class="mid">Immediate</td></tr>
@@ -517,11 +510,12 @@
 
         <div id="d-sp">
           <div class="doc-sec-title">Spatial Detection <span class="tag-s tag-cpp">C++ Only</span></div>
-          <p class="doc-p">The C++ system's foundation is a <strong>spatial hash grid</strong>. The world is divided into uniform cells, and each agent registers its position into the appropriate cell every tick. Neighbor queries only scan the small patch of cells within detection range — never the full agent list.</p>
+          <p class="doc-p">The C++ system's awareness model is built around <strong>probe points distributed radially around the agent</strong>. Rather than querying a static world structure, each collider in the environment dynamically influences these probe points as the agent moves through the scene. When a collider enters the range of a probe, it registers as a contact and contributes a directional response — the agent's perception of its surroundings is therefore entirely reactive, assembled fresh each tick from live collider interactions.</p>
+          <p class="doc-p">This is visualized clearly in the debug view: the ring of probes around the agent lights up at contact points, and you can see how differently-shaped or positioned colliders push the probe responses — and therefore the agent's steering — in different directions. The <strong>desired path</strong> is also drawn, showing the direction the agent would take in open space versus where it actually steers after probe influences are applied.</p>
           <div class="math-box">
-            <div class="math-lbl">Grid Cell Mapping</div>
-            <div class="math-f">cell(x, y) = ( ⌊x / cellSize⌋,  ⌊y / cellSize⌋ )</div>
-            <div class="math-note">Every world position maps to a discrete cell via integer division. When cellSize equals the agent's detection radius, all relevant neighbors are guaranteed to be in immediately adjacent cells — a 3×3 or 5×5 patch. The query cost stays flat and cache-friendly regardless of total scene population. In a crowd of 500, each agent still only ever processes a small, predictable neighborhood.</div>
+            <div class="math-lbl">Probe Contact Influence</div>
+            <div class="math-f">F_probe = Σ &nbsp;[ (1 − dᵢ/r) × normalize(P_agent − P_collideri) ]</div>
+            <div class="math-note">Each probe i that is within influence radius r of a collider contributes a weighted push vector. The weight scales linearly with proximity — a probe flush against a collider surface pushes at full strength, while one at the edge of its range contributes almost nothing. All active probe contributions are summed into a single avoidance force that feeds into the final movement calculation. The agent never needs to know about the world's geometry explicitly — it only responds to what its probes are currently feeling.</div>
           </div>
         </div>
 

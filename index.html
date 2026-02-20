@@ -25,7 +25,7 @@
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
+    html { scroll-behavior: smooth; max-width: 100%; overflow-x: hidden; }
 
     body {
       background: var(--bg);
@@ -34,6 +34,7 @@
       font-size: 13px;
       line-height: 1.7;
       overflow-x: hidden;
+      max-width: 100%;
     }
 
     /* Blueprint grid */
@@ -311,9 +312,9 @@
 
       /* Globals */
       .wrap { padding: 0 16px; }
-      body { font-size: 12px; }
+      body { font-size: 12px; overflow-x: hidden; }
 
-      /* Nav — collapse to logo + hamburger feel */
+      /* Nav */
       .nav-inner { padding: 0 16px; height: auto; flex-wrap: wrap; gap: 0; }
       .nav-logo { font-size: 11px; padding: 10px 0; }
       .nav-links {
@@ -324,22 +325,44 @@
       }
       .nav-links::-webkit-scrollbar { display: none; }
       .nav-btn { font-size: 9px; padding: 5px 10px; white-space: nowrap; }
-      .nav-li { display: none; } /* hide linkedin in nav on mobile, it's in footer */
+      .nav-li { display: none; }
 
       /* Hero */
       .hero { padding: 110px 0 40px; }
       .hero-grid { grid-template-columns: 1fr; gap: 28px; }
       .hero-meta { font-size: 9px; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
-      h1 { font-size: clamp(32px, 10vw, 52px); margin-bottom: 20px; }
-      .hero-sub { font-size: 12px; margin-bottom: 20px; }
+
+      /* Title — constrain width so it never bleeds right */
+      h1 {
+        font-size: clamp(28px, 9vw, 48px);
+        margin-bottom: 20px;
+        word-break: break-word;
+        overflow-wrap: break-word;
+        max-width: 100%;
+        letter-spacing: -0.03em;
+      }
+
+      .hero-sub { font-size: 12px; margin-bottom: 20px; max-width: 100%; }
       .hero-tags { gap: 5px; }
       .tag { font-size: 9px; padding: 3px 8px; }
 
-      /* Hero panel — horizontal scroll table feel */
-      .hero-panel { font-size: 10px; }
-      .panel-row { padding: 8px 12px; }
-      .panel-key { font-size: 9px; }
-      .panel-val { font-size: 10px; }
+      /* Hero panel — fix right-side cutoff */
+      .hero-panel { width: 100%; font-size: 10px; overflow: hidden; }
+      .panel-row {
+        padding: 8px 12px;
+        display: flex; justify-content: space-between;
+        gap: 8px; min-width: 0;
+      }
+      .panel-key { font-size: 9px; flex-shrink: 0; }
+      .panel-val {
+        font-size: 10px;
+        text-align: right;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        min-width: 0;
+        max-width: 55%;
+      }
 
       /* Sections */
       section { padding: 48px 0; }

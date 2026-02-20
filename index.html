@@ -1,25 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Crowd Avoidance Systems – UE5 | Hritesh Kashyap</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
-
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Crowd Avoidance – UE5 | Ritesh Kashyap</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet"/>
   <style>
     :root {
-      --bg: #080c10;
-      --surface: #0e1318;
-      --surface2: #131a22;
-      --border: rgba(255,255,255,0.07);
-      --accent-cpp: #00e5a0;
-      --accent-bp: #5b8fff;
-      --accent-doc: #f0a050;
-      --text: #e8edf2;
-      --muted: #5a6a7a;
-      --dim: #2a3a4a;
+      --bg:       #dfe8df;
+      --bg2:      #d4dfd4;
+      --surface:  #cdd8cd;
+      --surface2: #c4d0c4;
+      --border:   rgba(0,0,0,0.10);
+      --border2:  rgba(0,0,0,0.18);
+      --text:     #111a11;
+      --muted:    #4a5f4a;
+      --dim:      #7a917a;
+      --acc-cpp:  #1a6e3a;
+      --acc-bp:   #1a3e7a;
+      --acc-doc:  #7a4a10;
+      --acc-red:  #8a1a1a;
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -29,198 +31,296 @@
       background: var(--bg);
       color: var(--text);
       font-family: 'JetBrains Mono', monospace;
-      font-size: 14px;
+      font-size: 13px;
       line-height: 1.7;
       overflow-x: hidden;
     }
 
+    /* Blueprint grid */
     body::before {
       content: '';
-      position: fixed; inset: 0;
+      position: fixed; inset: 0; z-index: 0;
       background-image:
-        linear-gradient(rgba(0,229,160,0.018) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0,229,160,0.018) 1px, transparent 1px);
-      background-size: 60px 60px;
-      pointer-events: none; z-index: 0;
+        linear-gradient(rgba(0,0,0,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,0,0,0.04) 1px, transparent 1px),
+        linear-gradient(rgba(0,0,0,0.015) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,0,0,0.015) 1px, transparent 1px);
+      background-size: 80px 80px, 80px 80px, 16px 16px, 16px 16px;
+      pointer-events: none;
     }
 
-    .wrap { position: relative; z-index: 1; max-width: 1100px; margin: 0 auto; padding: 0 32px; }
+    .wrap { position: relative; z-index: 1; max-width: 1120px; margin: 0 auto; padding: 0 32px; }
 
-    /* NAV */
+    /* ── NAV ── */
     nav {
-      position: fixed; top: 0; left: 0; right: 0;
-      z-index: 100;
-      border-bottom: 1px solid var(--border);
-      background: rgba(8,12,16,0.92);
-      backdrop-filter: blur(14px);
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(223,232,223,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border2);
     }
-    nav .inner {
-      max-width: 1100px; margin: 0 auto;
+    .nav-inner {
+      max-width: 1120px; margin: 0 auto; padding: 0 32px;
       display: flex; align-items: center; justify-content: space-between;
-      height: 58px; padding: 0 32px; gap: 16px;
+      height: 56px; gap: 16px;
     }
     .nav-logo {
-      font-family: 'Syne', sans-serif; font-weight: 800; font-size: 14px;
-      color: var(--accent-cpp); letter-spacing: 0.05em; text-decoration: none; flex-shrink: 0;
+      font-family: 'Syne', sans-serif; font-weight: 800; font-size: 13px;
+      color: var(--text); letter-spacing: 0.06em; text-decoration: none;
+      flex-shrink: 0; display: flex; align-items: center; gap: 10px;
     }
-    .nav-links { display: flex; gap: 4px; }
+    .nav-logo::before {
+      content: ''; width: 8px; height: 8px; border-radius: 50%;
+      background: var(--acc-cpp); flex-shrink: 0;
+    }
+    .nav-links { display: flex; gap: 2px; }
     .nav-btn {
       background: none; border: 1px solid transparent;
       color: var(--muted); font-family: 'JetBrains Mono', monospace;
-      font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
-      padding: 6px 14px; border-radius: 2px; cursor: pointer;
-      transition: color 0.2s, border-color 0.2s, background 0.2s;
+      font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
+      padding: 5px 13px; cursor: pointer;
+      transition: all 0.18s; border-radius: 1px;
     }
-    .nav-btn:hover { color: var(--text); border-color: var(--border); }
-    .nav-btn-cpp  { color: var(--accent-cpp); border-color: rgba(0,229,160,0.2); background: rgba(0,229,160,0.04); }
-    .nav-btn-bp   { color: var(--accent-bp);  border-color: rgba(91,143,255,0.2); background: rgba(91,143,255,0.04); }
-    .nav-btn-cmp  { color: var(--text); border-color: var(--border); background: var(--surface); }
-    .nav-btn-doc  { color: var(--accent-doc); border-color: rgba(240,160,80,0.2); background: rgba(240,160,80,0.04); }
-    .nav-li-link {
+    .nav-btn:hover { color: var(--text); border-color: var(--border2); background: var(--surface); }
+    .nav-btn-cpp { color: var(--acc-cpp); border-color: rgba(26,110,58,0.25); background: rgba(26,110,58,0.06); }
+    .nav-btn-bp  { color: var(--acc-bp);  border-color: rgba(26,62,122,0.25); background: rgba(26,62,122,0.06); }
+    .nav-btn-cmp { color: var(--text); border-color: var(--border2); background: var(--surface); }
+    .nav-btn-doc { color: var(--acc-doc); border-color: rgba(122,74,16,0.25); background: rgba(122,74,16,0.06); }
+    .nav-li {
       display: flex; align-items: center; gap: 7px;
-      color: var(--muted); font-size: 11px; letter-spacing: 0.08em;
+      color: var(--muted); font-size: 10px; letter-spacing: 0.1em;
       text-decoration: none; transition: color 0.2s; flex-shrink: 0;
     }
-    .nav-li-link:hover { color: var(--accent-cpp); }
-    .li-icon { width: 15px; height: 15px; fill: currentColor; }
+    .nav-li:hover { color: var(--acc-cpp); }
+    .li-icon { width: 14px; height: 14px; fill: currentColor; }
 
-    /* HERO */
-    .hero { padding: 150px 0 80px; }
-    .hero-eyebrow {
-      font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
-      color: var(--accent-cpp); margin-bottom: 20px;
-      display: flex; align-items: center; gap: 12px;
+    /* ── HERO ── */
+    .hero { padding: 140px 0 64px; position: relative; }
+
+    .hero-meta {
+      display: flex; align-items: center; gap: 20px;
+      margin-bottom: 32px; font-size: 10px; letter-spacing: 0.15em;
+      text-transform: uppercase; color: var(--dim);
     }
-    .hero-eyebrow::before { content: ''; display: block; width: 32px; height: 1px; background: var(--accent-cpp); }
+    .hero-meta::before { content: 'SYS-001'; }
+    .hero-meta-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--acc-cpp); }
+
+    .hero-grid { display: grid; grid-template-columns: 1fr 340px; gap: 64px; align-items: start; }
+    @media (max-width: 900px) { .hero-grid { grid-template-columns: 1fr; } }
+
     h1 {
       font-family: 'Syne', sans-serif; font-weight: 800;
-      font-size: clamp(40px, 7vw, 80px); line-height: 0.95;
-      letter-spacing: -0.03em; margin-bottom: 28px;
+      font-size: clamp(48px, 7vw, 88px); line-height: 0.9;
+      letter-spacing: -0.04em; color: var(--text);
+      margin-bottom: 32px;
     }
-    h1 em { font-style: normal; -webkit-text-stroke: 1px var(--accent-cpp); color: transparent; }
-    .hero-sub { max-width: 560px; color: var(--muted); font-size: 13px; line-height: 1.8; margin-bottom: 40px; }
-    .hero-tags { display: flex; flex-wrap: wrap; gap: 8px; }
-    .tag { padding: 5px 14px; border: 1px solid var(--border); border-radius: 2px; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+    h1 .outline {
+      -webkit-text-stroke: 1.5px var(--text);
+      color: transparent;
+    }
 
-    /* SECTIONS */
-    section { padding: 80px 0; border-top: 1px solid var(--border); }
-    .section-header { display: flex; align-items: center; gap: 16px; margin-bottom: 44px; }
-    .section-header .num { font-size: 11px; color: var(--muted); letter-spacing: 0.15em; }
-    .section-header h2 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 26px; letter-spacing: -0.02em; }
-    .section-divider { flex: 1; height: 1px; background: var(--border); }
+    .hero-sub { color: var(--muted); font-size: 13px; line-height: 1.85; margin-bottom: 28px; }
+    .hero-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .tag {
+      padding: 4px 11px; border: 1px solid var(--border2);
+      font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--muted); background: var(--surface);
+    }
 
-    /* VIDEO GRIDS */
-    .video-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 48px; }
-    .video-grid-1 { display: grid; grid-template-columns: 1fr; max-width: 600px; margin-bottom: 48px; }
-    @media (max-width: 900px) { .video-grid-3 { grid-template-columns: 1fr; } }
-    .video-wrap { display: flex; flex-direction: column; gap: 10px; }
-    .video-label { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); display: flex; align-items: center; gap: 8px; }
-    .video-label span { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
-    .video-embed { aspect-ratio: 16/9; background: var(--surface2); border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
-    .video-embed iframe { width: 100%; height: 100%; border: none; }
-    .video-placeholder { width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; color: var(--dim); }
-    .video-placeholder .play { width: 44px; height: 44px; border: 1px solid var(--dim); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; }
-    .video-placeholder p { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; text-align: center; padding: 0 12px; }
+    /* Hero side panel */
+    .hero-panel {
+      border: 1px solid var(--border2);
+      background: var(--surface);
+      padding: 0;
+      font-size: 11px;
+    }
+    .panel-row {
+      display: flex; justify-content: space-between;
+      padding: 10px 14px; border-bottom: 1px solid var(--border);
+      gap: 16px;
+    }
+    .panel-row:last-child { border-bottom: none; }
+    .panel-key { color: var(--dim); letter-spacing: 0.08em; text-transform: uppercase; font-size: 10px; }
+    .panel-val { color: var(--text); font-weight: 500; text-align: right; }
+    .panel-header {
+      background: var(--surface2); padding: 8px 14px;
+      border-bottom: 1px solid var(--border2);
+      font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--dim);
+    }
 
-    /* BADGES + FEATURES */
-    .version-badge { display: inline-flex; align-items: center; gap: 8px; margin-bottom: 14px; }
-    .version-badge .dot { width: 8px; height: 8px; border-radius: 50%; }
-    .version-badge .label { font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; }
-    .cpp-color { color: var(--accent-cpp); }
-    .bp-color  { color: var(--accent-bp); }
-    .doc-color { color: var(--accent-doc); }
-    .cpp-dot   { background: var(--accent-cpp); box-shadow: 0 0 8px var(--accent-cpp); }
-    .bp-dot    { background: var(--accent-bp);  box-shadow: 0 0 8px var(--accent-bp); }
-    .system-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 20px; letter-spacing: -0.02em; margin-bottom: 10px; }
-    .system-desc  { color: var(--muted); font-size: 13px; line-height: 1.8; margin-bottom: 28px; }
-    .feature-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
-    .feature-list li { display: flex; align-items: flex-start; gap: 12px; font-size: 13px; padding: 10px 14px; background: var(--surface); border: 1px solid var(--border); border-radius: 3px; transition: border-color 0.2s; }
-    .feature-list li:hover { border-color: var(--dim); }
-    .feature-list .arrow { flex-shrink: 0; margin-top: 1px; }
-    .cpp-arrow { color: var(--accent-cpp); }
-    .bp-arrow  { color: var(--accent-bp); }
+    /* ── SECTIONS ── */
+    section { padding: 72px 0; border-top: 1px solid var(--border2); }
 
-    /* COMPARE TABLE */
-    .compare-table { width: 100%; border-collapse: collapse; }
-    .compare-table th, .compare-table td { padding: 14px 20px; text-align: left; border-bottom: 1px solid var(--border); font-size: 13px; }
-    .compare-table thead th { font-family: 'Syne', sans-serif; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); background: var(--surface); }
-    .compare-table thead th:nth-child(2) { color: var(--accent-cpp); }
-    .compare-table thead th:nth-child(3) { color: var(--accent-bp); }
-    .compare-table tbody tr { transition: background 0.15s; }
-    .compare-table tbody tr:hover { background: var(--surface); }
-    .compare-table td:first-child { color: var(--muted); }
-    .good { color: var(--accent-cpp); }
-    .mid  { color: var(--accent-bp); }
-    .na   { color: var(--muted); }
+    .section-header { display: flex; align-items: center; gap: 14px; margin-bottom: 40px; }
+    .section-num {
+      font-size: 10px; letter-spacing: 0.15em; color: var(--dim);
+      border: 1px solid var(--border2); padding: 3px 8px; background: var(--surface);
+    }
+    .section-header h2 {
+      font-family: 'Syne', sans-serif; font-weight: 700;
+      font-size: 24px; letter-spacing: -0.02em;
+    }
+    .section-line { flex: 1; height: 1px; background: var(--border2); }
 
-    /* DOCS */
-    .doc-grid { display: grid; grid-template-columns: 220px 1fr; gap: 48px; align-items: start; }
-    @media (max-width: 768px) { .doc-grid { grid-template-columns: 1fr; } }
-    .doc-sidebar { position: sticky; top: 78px; }
-    .doc-sidebar-title { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; }
-    .doc-nav { display: flex; flex-direction: column; gap: 2px; }
-    .doc-nav-item {
-      padding: 8px 12px; border-left: 2px solid transparent;
-      font-size: 12px; color: var(--muted); cursor: pointer;
-      transition: color 0.2s, border-color 0.2s;
+    /* ── VIDEOS ── */
+    .video-grid-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; margin-bottom: 44px; }
+    .video-grid-1 { display: grid; grid-template-columns: 1fr; max-width: 580px; margin-bottom: 44px; }
+    @media (max-width: 860px) { .video-grid-3 { grid-template-columns: 1fr; } }
+
+    .video-wrap { display: flex; flex-direction: column; gap: 8px; }
+    .video-label {
+      font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--dim); display: flex; align-items: center; gap: 8px;
+      padding: 6px 10px; background: var(--surface2); border: 1px solid var(--border);
+      border-bottom: none;
+    }
+    .video-label .dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
+    .video-embed {
+      aspect-ratio: 16/9; background: var(--surface2);
+      border: 1px solid var(--border2); overflow: hidden;
+    }
+    .video-embed iframe { width: 100%; height: 100%; border: none; display: block; }
+
+    /* ── SYSTEM INFO ── */
+    .sys-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+    @media (max-width: 768px) { .sys-grid { grid-template-columns: 1fr; } }
+
+    .version-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      margin-bottom: 12px; padding: 4px 10px;
+      border: 1px solid var(--border2); background: var(--surface);
+    }
+    .badge-dot { width: 6px; height: 6px; border-radius: 50%; }
+    .badge-label { font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; }
+    .cpp-c { color: var(--acc-cpp); }
+    .cpp-d { background: var(--acc-cpp); }
+    .bp-c  { color: var(--acc-bp); }
+    .bp-d  { background: var(--acc-bp); }
+
+    .sys-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 18px; letter-spacing: -0.02em; margin-bottom: 8px; }
+    .sys-desc  { color: var(--muted); font-size: 13px; line-height: 1.85; margin-bottom: 24px; }
+
+    .feat-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+    .feat-list li {
+      display: flex; align-items: flex-start; gap: 10px;
+      padding: 9px 12px; background: var(--surface);
+      border: 1px solid var(--border); font-size: 12px;
+      transition: border-color 0.15s, background 0.15s;
+    }
+    .feat-list li:hover { border-color: var(--border2); background: var(--surface2); }
+    .feat-arrow { flex-shrink: 0; margin-top: 1px; font-size: 11px; }
+
+    /* ── COMPARE ── */
+    .cmp-table { width: 100%; border-collapse: collapse; }
+    .cmp-table th, .cmp-table td {
+      padding: 11px 18px; text-align: left;
+      border-bottom: 1px solid var(--border); font-size: 12px;
+    }
+    .cmp-table thead tr { background: var(--surface2); border-bottom: 2px solid var(--border2); }
+    .cmp-table thead th { font-family: 'Syne', sans-serif; font-size: 11px; letter-spacing: 0.08em; }
+    .cmp-table thead th:nth-child(2) { color: var(--acc-cpp); }
+    .cmp-table thead th:nth-child(3) { color: var(--acc-bp); }
+    .cmp-table tbody tr { transition: background 0.12s; }
+    .cmp-table tbody tr:hover { background: var(--surface); }
+    .cmp-table td:first-child { color: var(--dim); font-size: 11px; letter-spacing: 0.04em; }
+    .good { color: var(--acc-cpp); }
+    .mid  { color: var(--acc-bp); }
+    .na   { color: var(--dim); }
+
+    /* ── DOCS ── */
+    .doc-layout { display: grid; grid-template-columns: 200px 1fr; gap: 48px; align-items: start; }
+    @media (max-width: 768px) { .doc-layout { grid-template-columns: 1fr; } }
+
+    .doc-sidebar { position: sticky; top: 72px; }
+    .doc-sidebar-hd {
+      font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--dim); margin-bottom: 8px; padding: 0 10px;
+    }
+    .doc-nav { display: flex; flex-direction: column; }
+    .doc-nav-btn {
+      padding: 8px 10px; border-left: 2px solid transparent;
+      font-size: 11px; color: var(--muted); cursor: pointer;
       background: none; border-right: none; border-top: none; border-bottom: none;
-      text-align: left; font-family: 'JetBrains Mono', monospace; letter-spacing: 0.03em;
+      text-align: left; font-family: 'JetBrains Mono', monospace;
+      letter-spacing: 0.02em; transition: all 0.15s;
     }
-    .doc-nav-item:hover { color: var(--text); border-left-color: var(--dim); }
-    .doc-nav-item.active { color: var(--accent-doc); border-left-color: var(--accent-doc); }
-    .doc-content { display: flex; flex-direction: column; gap: 60px; }
-    .doc-block-title {
-      font-family: 'Syne', sans-serif; font-weight: 700; font-size: 20px;
-      letter-spacing: -0.02em; margin-bottom: 16px;
-      display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+    .doc-nav-btn:hover { color: var(--text); border-left-color: var(--border2); background: var(--surface); }
+    .doc-nav-btn.on { color: var(--acc-doc); border-left-color: var(--acc-doc); background: rgba(122,74,16,0.05); }
+
+    .doc-body { display: flex; flex-direction: column; gap: 56px; }
+
+    .doc-sec-title {
+      font-family: 'Syne', sans-serif; font-weight: 700; font-size: 18px;
+      letter-spacing: -0.02em; margin-bottom: 14px;
+      display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
     }
-    .tag-small { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.1em; padding: 3px 8px; border-radius: 2px; text-transform: uppercase; }
-    .tag-cpp  { background: rgba(0,229,160,0.1); color: var(--accent-cpp); }
-    .tag-bp   { background: rgba(91,143,255,0.1); color: var(--accent-bp); }
-    .tag-both { background: rgba(240,160,80,0.1); color: var(--accent-doc); }
-    .doc-p { color: var(--muted); font-size: 13px; line-height: 1.9; margin-bottom: 16px; }
+    .tag-s {
+      font-family: 'JetBrains Mono', monospace; font-size: 9px;
+      letter-spacing: 0.1em; padding: 2px 7px; text-transform: uppercase;
+    }
+    .tag-cpp  { background: rgba(26,110,58,0.1); color: var(--acc-cpp); border: 1px solid rgba(26,110,58,0.2); }
+    .tag-bp   { background: rgba(26,62,122,0.1); color: var(--acc-bp);  border: 1px solid rgba(26,62,122,0.2); }
+    .tag-both { background: rgba(122,74,16,0.1); color: var(--acc-doc); border: 1px solid rgba(122,74,16,0.2); }
+
+    .doc-p { color: var(--muted); font-size: 12px; line-height: 1.9; margin-bottom: 14px; }
     .doc-p strong { color: var(--text); }
-    .math-block {
-      background: var(--surface2); border: 1px solid var(--border);
-      border-left: 3px solid var(--accent-doc); border-radius: 3px;
-      padding: 20px 24px; margin: 20px 0;
+
+    .math-box {
+      background: var(--surface2); border: 1px solid var(--border2);
+      border-left: 3px solid var(--acc-doc);
+      padding: 18px 22px; margin: 18px 0;
     }
-    .math-block .math-label { font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent-doc); margin-bottom: 10px; }
-    .math-formula { font-size: 15px; color: var(--text); letter-spacing: 0.03em; margin-bottom: 10px; }
-    .math-explain { font-size: 12px; color: var(--muted); line-height: 1.75; }
+    .math-lbl { font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--acc-doc); margin-bottom: 10px; }
+    .math-f { font-size: 14px; color: var(--text); letter-spacing: 0.03em; margin-bottom: 10px; font-weight: 500; }
+    .math-note { font-size: 11px; color: var(--muted); line-height: 1.75; }
+
     .callout {
-      background: var(--surface); border: 1px solid var(--border); border-radius: 3px;
-      padding: 16px 20px; margin: 20px 0; font-size: 13px; color: var(--muted); line-height: 1.8;
+      background: var(--surface); border: 1px solid var(--border2);
+      padding: 14px 18px; margin: 16px 0;
+      font-size: 12px; color: var(--muted); line-height: 1.85;
     }
     .callout strong { color: var(--text); }
 
-    /* FOOTER */
-    footer { border-top: 1px solid var(--border); padding: 40px 0; text-align: center; }
-    footer p { color: var(--muted); font-size: 12px; }
-    footer a { color: var(--accent-cpp); text-decoration: none; }
+    /* ── FOOTER ── */
+    footer { border-top: 2px solid var(--border2); padding: 36px 0; }
+    .footer-inner {
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 12px;
+    }
+    footer p { color: var(--dim); font-size: 11px; }
+    footer a { color: var(--acc-cpp); text-decoration: none; }
     footer a:hover { text-decoration: underline; }
+    .footer-ref {
+      font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--dim); display: flex; align-items: center; gap: 8px;
+    }
+    .footer-ref::before { content: 'REF-CAI-001'; }
 
-    /* FADE */
-    .fade-up { opacity: 0; transform: translateY(20px); transition: opacity 0.55s ease, transform 0.55s ease; }
-    .fade-up.visible { opacity: 1; transform: translateY(0); }
+    /* ── FADE ── */
+    .fu { opacity: 0; transform: translateY(18px); transition: opacity 0.5s ease, transform 0.5s ease; }
+    .fu.on { opacity: 1; transform: translateY(0); }
+
+    /* corner decoration */
+    .corner-mark {
+      position: absolute; font-size: 9px; letter-spacing: 0.1em;
+      color: var(--dim); text-transform: uppercase;
+    }
   </style>
 </head>
 <body>
 
 <!-- NAV -->
 <nav>
-  <div class="inner">
-    <a class="nav-logo" href="#">HRITESH // UE5 AI</a>
+  <div class="nav-inner">
+    <a class="nav-logo" href="#">HRITESH KASHYAP // UE5</a>
     <div class="nav-links">
-      <button class="nav-btn nav-btn-cpp" onclick="navScrollTo('cpp')">C++ System</button>
-      <button class="nav-btn nav-btn-bp"  onclick="navScrollTo('blueprint')">Blueprint</button>
-      <button class="nav-btn nav-btn-cmp" onclick="navScrollTo('compare')">Compare</button>
-      <button class="nav-btn nav-btn-doc" onclick="navScrollTo('docs')">Documentation</button>
+      <button class="nav-btn nav-btn-cpp" onclick="go('cpp')">C++ System</button>
+      <button class="nav-btn nav-btn-bp"  onclick="go('blueprint')">Blueprint</button>
+      <button class="nav-btn nav-btn-cmp" onclick="go('compare')">Compare</button>
+      <button class="nav-btn nav-btn-doc" onclick="go('docs')">Docs</button>
     </div>
-    <a class="nav-li-link" href="https://www.linkedin.com/in/hriteshkashyap/" target="_blank">
-      <svg class="li-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
-      </svg>
+    <a class="nav-li" href="https://www.linkedin.com/in/hriteshkashyap/" target="_blank">
+      <svg class="li-icon" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
       LinkedIn
     </a>
   </div>
@@ -229,20 +329,37 @@
 <!-- HERO -->
 <div class="wrap">
   <div class="hero">
-    <div class="hero-eyebrow">Unreal Engine 5 — AI Systems</div>
-    <h1>Crowd<br/><em>Avoidance</em><br/>Systems</h1>
-    <p class="hero-sub">
-      Two implementations of a real-time crowd avoidance system built in UE5 —
-      one engineered in pure C++ with full spatial awareness, probe-based collision detection,
-      and multi-state escape logic, one in Blueprint optimized for iteration speed and designer accessibility.
-    </p>
-    <div class="hero-tags">
-      <span class="tag">Unreal Engine 5</span>
-      <span class="tag">C++</span>
-      <span class="tag">Blueprint</span>
-      <span class="tag">Grid-Based AI</span>
-      <span class="tag">Steering Behaviors</span>
-      <span class="tag">Agent Simulation</span>
+    <div class="hero-meta">
+      <span class="hero-meta-dot"></span>
+      Unreal Engine 5 &nbsp;·&nbsp; AI Systems &nbsp;·&nbsp; Game Development
+    </div>
+
+    <div class="hero-grid">
+      <div>
+        <h1>CROWD<br/><span class="outline">AVOID</span><br/>ANCE</h1>
+        <p class="hero-sub">Two implementations of a real-time crowd avoidance system built in UE5 — one engineered in pure C++ with spatial grid detection, probe-based collision awareness, and multi-state escape logic; one in Blueprint optimized for rapid iteration and designer accessibility.</p>
+        <div class="hero-tags">
+          <span class="tag">Unreal Engine 5</span>
+          <span class="tag">C++ Plugin</span>
+          <span class="tag">Blueprint</span>
+          <span class="tag">Spatial Hashing</span>
+          <span class="tag">Steering AI</span>
+          <span class="tag">Agent Simulation</span>
+        </div>
+      </div>
+
+      <div class="hero-panel fu">
+        <div class="panel-header">// SYSTEM MANIFEST</div>
+        <div class="panel-row"><span class="panel-key">Project</span><span class="panel-val">CodeFundamentals</span></div>
+        <div class="panel-row"><span class="panel-key">Engine</span><span class="panel-val">UE5</span></div>
+        <div class="panel-row"><span class="panel-key">Implementations</span><span class="panel-val">2</span></div>
+        <div class="panel-row"><span class="panel-key">C++ Spatial Algo</span><span class="panel-val">Grid Hash O(1)</span></div>
+        <div class="panel-row"><span class="panel-key">Blueprint Algo</span><span class="panel-val">Overlap Query</span></div>
+        <div class="panel-row"><span class="panel-key">Debug System</span><span class="panel-val">Probe + Path Vis</span></div>
+        <div class="panel-row"><span class="panel-key">State Machine</span><span class="panel-val">Confidence-Based</span></div>
+        <div class="panel-row"><span class="panel-key">Escape Logic</span><span class="panel-val">Active</span></div>
+        <div class="panel-row"><span class="panel-key">Author</span><span class="panel-val">Hritesh Kashyap</span></div>
+      </div>
     </div>
   </div>
 </div>
@@ -250,60 +367,51 @@
 <!-- C++ SECTION -->
 <section id="cpp">
   <div class="wrap">
-    <div class="section-header fade-up">
-      <span class="num">01</span>
-      <h2 class="cpp-color">C++ Implementation</h2>
-      <div class="section-divider"></div>
+    <div class="section-header fu">
+      <span class="section-num">01</span>
+      <h2 class="cpp-c">C++ Implementation</h2>
+      <div class="section-line"></div>
     </div>
 
-    <div class="video-grid-3 fade-up">
+    <div class="video-grid-3 fu">
       <div class="video-wrap">
-        <div class="video-label"><span style="background:var(--accent-cpp)"></span>Gameplay Demo</div>
+        <div class="video-label"><span class="dot" style="background:var(--acc-cpp)"></span>Gameplay Demo</div>
         <div class="video-embed">
-          <!-- REPLACE: <iframe src="https://www.youtube.com/embed/YOUR_ID" allowfullscreen></iframe> -->
-          <div class="video-placeholder"><div class="play">▶</div><p>C++ Gameplay Demo</p></div>
+          <iframe src="https://www.youtube.com/embed/R_DG2QOsXr8" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
         </div>
       </div>
       <div class="video-wrap">
-        <div class="video-label"><span style="background:var(--accent-cpp)"></span>System Demo</div>
+        <div class="video-label"><span class="dot" style="background:var(--acc-cpp)"></span>System Demo</div>
         <div class="video-embed">
-          <!-- REPLACE: <iframe src="https://www.youtube.com/embed/YOUR_ID" allowfullscreen></iframe> -->
-          <div class="video-placeholder"><div class="play">▶</div><p>C++ System Demo</p></div>
+          <!-- Add second C++ video ID here if you have one, currently using same -->
+          <iframe src="https://www.youtube.com/embed/R_DG2QOsXr8" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
         </div>
       </div>
       <div class="video-wrap">
-        <div class="video-label"><span style="background:rgba(0,229,160,0.35)"></span>Debug View</div>
+        <div class="video-label"><span class="dot" style="background:rgba(26,110,58,0.4)"></span>Debug View</div>
         <div class="video-embed">
-          <!-- REPLACE: <iframe src="https://www.youtube.com/embed/YOUR_ID" allowfullscreen></iframe> -->
-          <div class="video-placeholder"><div class="play">▶</div><p>Probe Points + Collision + Desired Path Debug</p></div>
+          <iframe src="https://www.youtube.com/embed/hUiIwY-eoPw" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
         </div>
       </div>
     </div>
 
-    <div class="fade-up" style="transition-delay:0.1s">
-      <div class="version-badge">
-        <span class="dot cpp-dot"></span>
-        <span class="label cpp-color">C++ — Full Implementation</span>
+    <div class="sys-grid fu" style="transition-delay:0.1s">
+      <div>
+        <div class="version-badge"><span class="badge-dot cpp-d"></span><span class="badge-label cpp-c">C++ — Full Implementation</span></div>
+        <div class="sys-title">High-Performance Crowd Agent</div>
+        <p class="sys-desc">Built entirely in C++ for maximum runtime performance. Each agent maintains full spatial awareness through a grid-based lookup, perceives its surroundings through distributed probe points, and transitions between behavioral states using confidence-based logic. The debug view shows probe contacts on colliders and the agent's computed desired path in real time.</p>
       </div>
-      <div class="system-title">High-Performance Crowd Agent</div>
-      <p class="system-desc">
-        Built entirely in C++ for maximum runtime performance. Each agent maintains full spatial
-        awareness through a grid-based lookup system, perceives its environment through distributed
-        probe points, and transitions between behavioral states with confidence-based logic to
-        produce smooth, stable movement at scale. The debug view visualizes exactly how each agent
-        perceives its surroundings — probe contacts with colliders shown as active points, alongside
-        the desired path the agent is computing toward its goal.
-      </p>
-      <ul class="feature-list">
-        <li><span class="arrow cpp-arrow">→</span><span><strong>Grid-based spatial detection</strong> — agents query neighboring grid cells instead of iterating the full agent list, keeping lookup cost flat as crowd size grows</span></li>
-        <li><span class="arrow cpp-arrow">→</span><span><strong>Distributed probe points</strong> — a ring of sample points around each agent detects nearby colliders, with each contact contributing a weighted repulsion vector</span></li>
-        <li><span class="arrow cpp-arrow">→</span><span><strong>Desired path visualization</strong> — debug view renders the agent's computed goal path alongside actual trajectory, showing exactly how avoidance is deflecting movement</span></li>
-        <li><span class="arrow cpp-arrow">→</span><span><strong>Steering force accumulation</strong> — separation, alignment, collision avoidance, and goal forces are weighted and combined into a single smooth movement vector each frame</span></li>
-        <li><span class="arrow cpp-arrow">→</span><span><strong>Anticipatory path prediction</strong> — avoidance computed against projected future positions, not just current ones, allowing the system to react early and smoothly</span></li>
-        <li><span class="arrow cpp-arrow">→</span><span><strong>Confidence-based state switching</strong> — mode transitions require sustained conditions over time before committing, preventing erratic flickering behavior</span></li>
-        <li><span class="arrow cpp-arrow">→</span><span><strong>Emergency escape logic</strong> — detects full enclosure where normal avoidance forces cancel out, and fires a targeted breakout vector to resolve deadlock</span></li>
-        <li><span class="arrow cpp-arrow">→</span><span><strong>Stuck detection</strong> — displacement tracked over a rolling frame window; if an agent stops making progress, escape mode activates automatically</span></li>
-      </ul>
+      <div>
+        <ul class="feat-list">
+          <li><span class="feat-arrow cpp-c">→</span><span><strong>Grid-based spatial detection</strong> — flat O(1) neighbor query regardless of total crowd count</span></li>
+          <li><span class="feat-arrow cpp-c">→</span><span><strong>Distributed probe points</strong> — radial samples detect colliders, each contributing weighted repulsion</span></li>
+          <li><span class="feat-arrow cpp-c">→</span><span><strong>Desired path visualization</strong> — debug renders goal vector vs actual path, showing avoidance deflection live</span></li>
+          <li><span class="feat-arrow cpp-c">→</span><span><strong>Anticipatory prediction</strong> — avoidance computed against projected future positions, not just current</span></li>
+          <li><span class="feat-arrow cpp-c">→</span><span><strong>Confidence-based state switching</strong> — mode transitions require sustained trigger, not single-frame reading</span></li>
+          <li><span class="feat-arrow cpp-c">→</span><span><strong>Emergency escape logic</strong> — detects full enclosure where forces cancel; fires targeted breakout vector</span></li>
+          <li><span class="feat-arrow cpp-c">→</span><span><strong>Stuck detection</strong> — displacement tracked over rolling frame window; recovery triggers automatically</span></li>
+        </ul>
+      </div>
     </div>
   </div>
 </section>
@@ -311,41 +419,36 @@
 <!-- BLUEPRINT SECTION -->
 <section id="blueprint">
   <div class="wrap">
-    <div class="section-header fade-up">
-      <span class="num">02</span>
-      <h2 class="bp-color">Blueprint Implementation</h2>
-      <div class="section-divider"></div>
+    <div class="section-header fu">
+      <span class="section-num">02</span>
+      <h2 class="bp-c">Blueprint Implementation</h2>
+      <div class="section-line"></div>
     </div>
 
-    <div class="video-grid-1 fade-up">
+    <div class="video-grid-1 fu">
       <div class="video-wrap">
-        <div class="video-label"><span style="background:var(--accent-bp)"></span>Blueprint Demo</div>
+        <div class="video-label"><span class="dot" style="background:var(--acc-bp)"></span>Blueprint Demo</div>
         <div class="video-embed">
-          <!-- REPLACE: <iframe src="https://www.youtube.com/embed/YOUR_ID" allowfullscreen></iframe> -->
-          <div class="video-placeholder"><div class="play">▶</div><p>Blueprint Demo</p></div>
+          <iframe src="https://www.youtube.com/embed/CVa75tNhIyQ" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
         </div>
       </div>
     </div>
 
-    <div class="fade-up" style="transition-delay:0.1s">
-      <div class="version-badge">
-        <span class="dot bp-dot"></span>
-        <span class="label bp-color">Blueprint — Designer Friendly</span>
+    <div class="sys-grid fu" style="transition-delay:0.1s">
+      <div>
+        <div class="version-badge"><span class="badge-dot bp-d"></span><span class="badge-label bp-c">Blueprint — Designer Friendly</span></div>
+        <div class="sys-title">Lightweight Avoidance Agent</div>
+        <p class="sys-desc">A Blueprint-first approach that trades computational depth for rapid iteration and full designer accessibility. Uses separation and avoidance forces to produce convincing crowd behavior without spatial indexing or probe systems. All parameters are exposed and live-tunable in PIE without recompiling.</p>
       </div>
-      <div class="system-title">Lightweight Avoidance Agent</div>
-      <p class="system-desc">
-        A Blueprint-first approach that trades some computational depth for rapid iteration
-        and full designer accessibility. Uses separation and avoidance forces to produce
-        convincing crowd behavior without the overhead of spatial indexing or probe systems.
-        All parameters are exposed and tunable live in-editor without any code changes.
-      </p>
-      <ul class="feature-list">
-        <li><span class="arrow bp-arrow">→</span><span><strong>Separation forces</strong> — vector-based push away from nearby agents, per-character tunable without recompiling</span></li>
-        <li><span class="arrow bp-arrow">→</span><span><strong>Avoidance steering</strong> — lightweight directional bias computed per tick with minimal frame budget cost</span></li>
-        <li><span class="arrow bp-arrow">→</span><span><strong>Designer accessible</strong> — all parameters live on the Blueprint, adjustable in PIE with instant feedback</span></li>
-        <li><span class="arrow bp-arrow">→</span><span><strong>Low overhead</strong> — suitable for background crowds where density is needed at minimal frame cost</span></li>
-        <li><span class="arrow bp-arrow">→</span><span><strong>Rapid prototyping</strong> — ideal for validating crowd feel and density before committing to a full C++ implementation</span></li>
-      </ul>
+      <div>
+        <ul class="feat-list">
+          <li><span class="feat-arrow bp-c">→</span><span><strong>Separation forces</strong> — vector push away from nearby agents, tunable per character class</span></li>
+          <li><span class="feat-arrow bp-c">→</span><span><strong>Avoidance steering</strong> — lightweight directional bias, minimal frame budget cost</span></li>
+          <li><span class="feat-arrow bp-c">→</span><span><strong>Designer accessible</strong> — all parameters live on the Blueprint, adjustable in PIE instantly</span></li>
+          <li><span class="feat-arrow bp-c">→</span><span><strong>Low overhead</strong> — ideal for background crowds where density matters more than edge-case handling</span></li>
+          <li><span class="feat-arrow bp-c">→</span><span><strong>Rapid prototyping</strong> — validate crowd feel and density before committing to a full C++ pass</span></li>
+        </ul>
+      </div>
     </div>
   </div>
 </section>
@@ -353,187 +456,180 @@
 <!-- COMPARE -->
 <section id="compare">
   <div class="wrap">
-    <div class="section-header fade-up">
-      <span class="num">03</span>
+    <div class="section-header fu">
+      <span class="section-num">03</span>
       <h2>Head-to-Head</h2>
-      <div class="section-divider"></div>
+      <div class="section-line"></div>
     </div>
-    <div class="fade-up">
-      <table class="compare-table">
+    <div class="fu">
+      <table class="cmp-table">
         <thead>
           <tr><th>Criterion</th><th>C++ Version</th><th>Blueprint Version</th></tr>
         </thead>
         <tbody>
-          <tr><td>Spatial lookup</td><td class="good">Grid-hashed, flat cost</td><td class="mid">Linear overlap query</td></tr>
+          <tr><td>Spatial lookup</td><td class="good">Grid-hashed O(1)</td><td class="mid">Linear overlap query</td></tr>
           <tr><td>Collision awareness</td><td class="good">Distributed probe points</td><td class="na">Not implemented</td></tr>
           <tr><td>Desired path debug</td><td class="good">Visualized per agent</td><td class="na">None</td></tr>
-          <tr><td>State transitions</td><td class="good">Confidence-threshold based</td><td class="mid">Immediate</td></tr>
+          <tr><td>State transitions</td><td class="good">Confidence-threshold</td><td class="mid">Immediate</td></tr>
           <tr><td>Path prediction</td><td class="good">Anticipatory (future pos)</td><td class="na">Reactive only</td></tr>
           <tr><td>Stuck recovery</td><td class="good">Dedicated escape system</td><td class="na">Not implemented</td></tr>
           <tr><td>Emergency enclosure</td><td class="good">Fully handled</td><td class="na">Not handled</td></tr>
           <tr><td>Frame time at scale</td><td class="good">Stable</td><td class="mid">Acceptable at low density</td></tr>
           <tr><td>Designer access</td><td class="na">Requires recompile</td><td class="good">Live tunable in PIE</td></tr>
-          <tr><td>Best suited for</td><td class="good">Main agents, dense crowds</td><td class="mid">Background, prototyping</td></tr>
+          <tr><td>Best for</td><td class="good">Main agents, dense crowds</td><td class="mid">Background, prototyping</td></tr>
         </tbody>
       </table>
     </div>
   </div>
 </section>
 
-<!-- DOCUMENTATION -->
+<!-- DOCS -->
 <section id="docs">
   <div class="wrap">
-    <div class="section-header fade-up">
-      <span class="num">04</span>
-      <h2 class="doc-color">Documentation</h2>
-      <div class="section-divider"></div>
+    <div class="section-header fu">
+      <span class="section-num">04</span>
+      <h2 style="color:var(--acc-doc)">Documentation</h2>
+      <div class="section-line"></div>
     </div>
 
-    <div class="doc-grid fade-up">
+    <div class="doc-layout fu">
       <div class="doc-sidebar">
-        <div class="doc-sidebar-title">Contents</div>
+        <div class="doc-sidebar-hd">// Contents</div>
         <div class="doc-nav">
-          <button class="doc-nav-item active" onclick="docNav(this,'doc-overview')">Overview</button>
-          <button class="doc-nav-item" onclick="docNav(this,'doc-spatial')">Spatial Detection</button>
-          <button class="doc-nav-item" onclick="docNav(this,'doc-probes')">Probe System</button>
-          <button class="doc-nav-item" onclick="docNav(this,'doc-forces')">Force Model</button>
-          <button class="doc-nav-item" onclick="docNav(this,'doc-prediction')">Path Prediction</button>
-          <button class="doc-nav-item" onclick="docNav(this,'doc-states')">State Logic</button>
-          <button class="doc-nav-item" onclick="docNav(this,'doc-stuck')">Stuck Recovery</button>
-          <button class="doc-nav-item" onclick="docNav(this,'doc-bp')">Blueprint Approach</button>
+          <button class="doc-nav-btn on"  onclick="dn(this,'d-ov')">Overview</button>
+          <button class="doc-nav-btn"     onclick="dn(this,'d-sp')">Spatial Detection</button>
+          <button class="doc-nav-btn"     onclick="dn(this,'d-pb')">Probe System</button>
+          <button class="doc-nav-btn"     onclick="dn(this,'d-fo')">Force Model</button>
+          <button class="doc-nav-btn"     onclick="dn(this,'d-pr')">Path Prediction</button>
+          <button class="doc-nav-btn"     onclick="dn(this,'d-st')">State Logic</button>
+          <button class="doc-nav-btn"     onclick="dn(this,'d-sk')">Stuck Recovery</button>
+          <button class="doc-nav-btn"     onclick="dn(this,'d-bp')">Blueprint Approach</button>
         </div>
       </div>
 
-      <div class="doc-content">
+      <div class="doc-body">
 
-        <div class="doc-block" id="doc-overview">
-          <div class="doc-block-title">System Overview <span class="tag-small tag-both">Both Versions</span></div>
-          <p class="doc-p">The core problem crowd avoidance solves is straightforward to state but difficult to execute at runtime: <strong>each agent needs to reach its goal without colliding with every other agent trying to do the same thing</strong>. Naive approaches fall apart quickly — having every agent check every other agent is an O(n²) operation that becomes unusable as crowd size grows.</p>
-          <p class="doc-p">Both implementations solve this, but at different points on the cost-vs-quality tradeoff. The C++ version is engineered for correctness under adversarial conditions: dense crowds, tight corridors, and scenarios where agents end up completely surrounded. The Blueprint version is engineered for speed of iteration and low overhead — the right tool for background crowds and early prototyping.</p>
+        <div id="d-ov">
+          <div class="doc-sec-title">System Overview <span class="tag-s tag-both">Both Versions</span></div>
+          <p class="doc-p">The core problem crowd avoidance solves is simple to state but hard to execute at runtime: <strong>every agent needs to reach its goal without colliding with every other agent trying to do the same</strong>. Naive implementations — checking every agent against every other — scale as O(n²), becoming unusable past even moderate crowd sizes.</p>
+          <p class="doc-p">Both implementations here solve that, but at different points on the cost-vs-quality tradeoff. The C++ version is engineered for correctness under adversarial conditions: dense crowds, tight corridors, agents completely surrounded. The Blueprint version trades edge-case handling for iteration speed and is the right tool for background crowds and early design validation.</p>
         </div>
 
-        <div class="doc-block" id="doc-spatial">
-          <div class="doc-block-title">Spatial Detection <span class="tag-small tag-cpp">C++ Only</span></div>
-          <p class="doc-p">The foundation of the C++ system is a <strong>spatial hash grid</strong>. The world is divided into a uniform grid of cells, and each agent registers its position into the appropriate cell every tick. When an agent needs to know who is nearby, it queries only the cells within its detection radius — typically a 3×3 or 5×5 patch — rather than iterating the full agent list.</p>
-          <div class="math-block">
-            <div class="math-label">Grid Cell Mapping</div>
-            <div class="math-formula">cell(x, y) = ( ⌊x / cellSize⌋,  ⌊y / cellSize⌋ )</div>
-            <div class="math-explain">Every world position maps to a discrete cell index via integer division by cell size. When <em>cellSize</em> matches the agent's detection radius, all relevant neighbors are guaranteed to live in immediately adjacent cells — no further lookup needed. The query cost stays bounded and cache-friendly regardless of how large the total crowd gets.</div>
+        <div id="d-sp">
+          <div class="doc-sec-title">Spatial Detection <span class="tag-s tag-cpp">C++ Only</span></div>
+          <p class="doc-p">The C++ system's foundation is a <strong>spatial hash grid</strong>. The world is divided into uniform cells, and each agent registers its position into the appropriate cell every tick. Neighbor queries only scan the small patch of cells within detection range — never the full agent list.</p>
+          <div class="math-box">
+            <div class="math-lbl">Grid Cell Mapping</div>
+            <div class="math-f">cell(x, y) = ( ⌊x / cellSize⌋,  ⌊y / cellSize⌋ )</div>
+            <div class="math-note">Every world position maps to a discrete cell via integer division. When cellSize equals the agent's detection radius, all relevant neighbors are guaranteed to be in immediately adjacent cells — a 3×3 or 5×5 patch. The query cost stays flat and cache-friendly regardless of total scene population. In a crowd of 500, each agent still only ever processes a small, predictable neighborhood.</div>
           </div>
-          <p class="doc-p">The key insight is that the number of agents in any given cell is bounded by local density, not by total count. Even in a crowd of 500 agents, each agent only ever processes a small, predictable neighborhood — the cost stays flat as the scene scales.</p>
         </div>
 
-        <div class="doc-block" id="doc-probes">
-          <div class="doc-block-title">Probe-Based Collision Awareness <span class="tag-small tag-cpp">C++ Only</span></div>
-          <p class="doc-p">Rather than treating each agent as a single point, the C++ system distributes a set of <strong>probe points</strong> in a radial pattern around the agent. Each probe is a sample of the agent's perceived personal space. When a probe approaches a collider, it contributes a repulsion vector weighted by proximity — visible in the debug view as active contacts around the agent's boundary.</p>
-          <div class="math-block">
-            <div class="math-label">Probe Repulsion Weight</div>
-            <div class="math-formula">w = 1 − (d / r) &nbsp;&nbsp;→&nbsp;&nbsp; F_probe = w × normalize(P_agent − P_collider)</div>
-            <div class="math-explain">As distance <em>d</em> approaches zero, weight approaches 1 — maximum repulsion. When <em>d</em> equals the influence radius <em>r</em>, weight is zero — no contribution. The result is a smooth, continuous push that grows proportionally as the agent closes in on an obstacle. All probe contributions are summed before entering the final force pass.</div>
+        <div id="d-pb">
+          <div class="doc-sec-title">Probe-Based Collision Awareness <span class="tag-s tag-cpp">C++ Only</span></div>
+          <p class="doc-p">Rather than treating each agent as a single point, the C++ system places a ring of <strong>probe points</strong> around the agent. Each probe samples the agent's perceived personal space. When a probe approaches a collider, it contributes a repulsion vector weighted by proximity — visible in the debug view as active contact points around each agent's boundary.</p>
+          <div class="math-box">
+            <div class="math-lbl">Probe Repulsion Weight</div>
+            <div class="math-f">w = 1 − (d / r)&nbsp;&nbsp;→&nbsp;&nbsp; F_probe = w × normalize(P_agent − P_collider)</div>
+            <div class="math-note">As distance d approaches zero, weight approaches 1 — maximum push. When d equals the influence radius r, weight reaches zero — no contribution. The result is a smooth, continuous repulsion that grows proportionally as the agent closes in. All probe contributions are summed before entering the force pass, producing a single clean collision avoidance vector.</div>
           </div>
-          <p class="doc-p">The debug view also draws the <strong>desired path</strong> — the direction the agent would travel if the environment were empty. Comparing this to the actual trajectory makes it immediately clear how much the avoidance system is deflecting the agent, and by how much — making tuning intuitive and precise.</p>
+          <p class="doc-p">The debug view also renders the <strong>desired path</strong> — the direction the agent would travel in an empty scene. Comparing this against the actual trajectory shows exactly how much the avoidance system is deflecting the agent, making fine-tuning intuitive and precise.</p>
         </div>
 
-        <div class="doc-block" id="doc-forces">
-          <div class="doc-block-title">Force Accumulation Model <span class="tag-small tag-both">Both Versions</span></div>
-          <p class="doc-p">Both systems decompose agent movement into independent force components accumulated each tick. The final velocity is not chosen directly — it <em>emerges</em> from the balance of competing influences.</p>
+        <div id="d-fo">
+          <div class="doc-sec-title">Force Accumulation Model <span class="tag-s tag-both">Both Versions</span></div>
+          <p class="doc-p">Both systems decompose movement into independent force components accumulated each tick. The final velocity <em>emerges</em> from the balance of competing influences rather than being chosen directly.</p>
           <div class="callout">
-            <strong>Goal force</strong> — pulls the agent toward its target. This is the base intent that all other forces oppose or bend.<br/>
-            <strong>Separation force</strong> — pushes the agent away from agents within a minimum comfort distance.<br/>
-            <strong>Alignment force</strong> — nudges the agent to roughly match the average heading of nearby agents, reducing chaotic crossing paths.<br/>
+            <strong>Goal force</strong> — pulls the agent toward its target. The base intent that everything else opposes or bends.<br/>
+            <strong>Separation force</strong> — pushes away from agents within minimum comfort distance.<br/>
+            <strong>Alignment force</strong> — nudges the agent to roughly match average heading of neighbors, reducing chaotic crossing.<br/>
             <strong>Collision force</strong> — sums repulsion from all active probe contacts with static geometry. (C++ only)
           </div>
-          <div class="math-block">
-            <div class="math-label">Force Summation</div>
-            <div class="math-formula">V_final = normalize( w₁·F_goal + w₂·F_sep + w₃·F_align + w₄·F_collision ) × speed</div>
-            <div class="math-explain">Each component is weighted by a tunable scalar. The sum is normalized to unit length then scaled by the agent's target speed — avoidance only changes direction, never speed. Weights are the primary tuning dial for crowd feel: heavy separation produces spaced-out cautious movement; heavier goal weight produces urgency and tighter packing under pressure.</div>
-          </div>
-          <p class="doc-p">One important property: no single force dominates unconditionally. An agent surrounded on all sides has separation forces that cancel each other out, producing a near-zero net push — which is exactly the condition the emergency escape system exists to detect and resolve.</p>
-        </div>
-
-        <div class="doc-block" id="doc-prediction">
-          <div class="doc-block-title">Anticipatory Path Prediction <span class="tag-small tag-cpp">C++ Only</span></div>
-          <p class="doc-p">Purely reactive avoidance only responds to <em>current</em> positions. Two agents heading directly toward each other won't register the conflict until they're already close — making avoidance feel sudden and jerky when it finally kicks in.</p>
-          <p class="doc-p">The C++ system addresses this with <strong>future position estimation</strong>: each agent's velocity is used to project where it will be in a short lookahead window, and avoidance forces are computed against those predicted positions instead. This gives the system a small temporal advantage, allowing course corrections to begin earlier and resolve more smoothly.</p>
-          <div class="math-block">
-            <div class="math-label">Future Position Estimate</div>
-            <div class="math-formula">P_future = P_current + V_current × t_lookahead</div>
-            <div class="math-explain"><em>t_lookahead</em> is typically tuned between 0.3 and 0.8 seconds. Longer lookahead produces early, gentle avoidance arcs but may cause agents to swerve around things they would have passed fine. Shorter lookahead is more reactive but can feel sudden. The debug path overlay shows both the predicted trajectory and actual path, making this tradeoff visually observable and tunable at runtime.</div>
+          <div class="math-box">
+            <div class="math-lbl">Force Summation</div>
+            <div class="math-f">V_final = normalize( w₁·F_goal + w₂·F_sep + w₃·F_align + w₄·F_col ) × speed</div>
+            <div class="math-note">Each component is weighted by a tunable scalar. The sum is normalized to unit length then scaled by target speed — avoidance only changes direction, never speed. Heavy separation weight produces spaced-out cautious movement. Heavy goal weight produces urgency and tighter packing under pressure. One key property: when an agent is surrounded on all sides, separation forces cancel to near-zero — exactly the condition the escape system exists to resolve.</div>
           </div>
         </div>
 
-        <div class="doc-block" id="doc-states">
-          <div class="doc-block-title">State Transition Logic <span class="tag-small tag-cpp">C++ Only</span></div>
-          <p class="doc-p">The C++ agent operates across distinct behavioral states: normal movement, heightened avoidance, and emergency escape. Switching states the moment a threshold is crossed creates a specific problem — agents near the boundary condition <strong>flicker</strong>, toggling rapidly between modes on consecutive frames and producing jittery, unnatural movement.</p>
-          <p class="doc-p">The solution is a <strong>confidence accumulator</strong>. Instead of switching on a single frame's reading, the system tracks how long the triggering condition has been sustained. A transition only commits once accumulated time exceeds a minimum duration — adding deliberate inertia to the state machine.</p>
+        <div id="d-pr">
+          <div class="doc-sec-title">Anticipatory Path Prediction <span class="tag-s tag-cpp">C++ Only</span></div>
+          <p class="doc-p">Purely reactive avoidance only responds to current positions. Two agents heading directly toward each other won't register the conflict until they're already close — making avoidance feel sudden and jerky when it finally fires.</p>
+          <p class="doc-p">The C++ system uses <strong>future position estimation</strong>: each agent's velocity projects where it will be in a short lookahead window, and avoidance is computed against those predicted positions. This gives the system temporal advantage — course corrections begin earlier and resolve more smoothly.</p>
+          <div class="math-box">
+            <div class="math-lbl">Future Position Estimate</div>
+            <div class="math-f">P_future = P_current + V_current × t_lookahead</div>
+            <div class="math-note">t_lookahead is typically 0.3–0.8 seconds. Longer lookahead produces early gentle avoidance arcs but may cause agents to swerve around things they would have passed fine. Shorter is more reactive but can feel sudden. The debug path overlay shows both predicted trajectory and actual path simultaneously, making this tradeoff visually observable and tunable at runtime.</div>
+          </div>
+        </div>
+
+        <div id="d-st">
+          <div class="doc-sec-title">State Transition Logic <span class="tag-s tag-cpp">C++ Only</span></div>
+          <p class="doc-p">The C++ agent operates across distinct states: normal movement, heightened avoidance, and emergency escape. Switching state the moment a threshold is crossed causes <strong>flickering</strong> — agents near the boundary condition toggle rapidly on consecutive frames, producing jittery, unnatural movement.</p>
           <div class="callout">
-            Think of it the way a person decides whether to change direction in a crowd: they don't immediately stop walking at the first sign of density. They observe the situation over a moment, assess whether it's truly getting worse, and only then adjust. The accumulator enforces the same patience mathematically.
+            Think of how a person decides to change direction in a crowd: they don't halt the moment they feel slightly cramped. They observe over a moment, assess whether it's getting worse, and only then adjust. The accumulator enforces the same patience mathematically.
           </div>
-          <div class="math-block">
-            <div class="math-label">Confidence Accumulation</div>
-            <div class="math-formula">confidence += Δt &nbsp;(while condition holds)&nbsp;&nbsp;→&nbsp;&nbsp; if confidence > threshold: commit()</div>
-            <div class="math-explain">The accumulator increments by delta time each frame the condition is true, and resets if the condition breaks before the threshold is reached. A transition only fires after sustained presence above threshold — typically 0.1 to 0.2 seconds. This eliminates single-frame jitter while still responding promptly to genuine, sustained changes in the environment.</div>
-          </div>
-        </div>
-
-        <div class="doc-block" id="doc-stuck">
-          <div class="doc-block-title">Stuck Detection &amp; Escape <span class="tag-small tag-cpp">C++ Only</span></div>
-          <p class="doc-p">Even a well-tuned avoidance system produces deadlock. Two agents approaching each other head-on with symmetric separation forces produce a zero-sum push — both agents stall, each blocked by the other. In dense crowds this occurs regularly without a dedicated recovery system.</p>
-          <p class="doc-p">Stuck detection works by monitoring each agent's <strong>displacement over a rolling frame window</strong>. If total movement over that window falls below a minimum threshold, the agent is flagged as stuck. An escape vector — typically perpendicular to the blocked axis — is then injected into the force calculation with high priority weight to break the deadlock.</p>
-          <div class="math-block">
-            <div class="math-label">Displacement Check</div>
-            <div class="math-formula">displacement = | P_now − P_N_frames_ago |</div>
-            <div class="math-explain">If <em>displacement</em> stays below <em>minMoveThreshold</em> for the full sample window, escape mode activates. The escape vector is the right-perpendicular of the goal direction — a sidestep that breaks symmetry without abandoning the goal. Once displacement recovers above threshold on a subsequent window, escape mode clears and normal avoidance resumes automatically.</div>
+          <div class="math-box">
+            <div class="math-lbl">Confidence Accumulation</div>
+            <div class="math-f">confidence += Δt &nbsp;(while condition holds)&nbsp;&nbsp;→&nbsp;&nbsp; if confidence > threshold: commit()</div>
+            <div class="math-note">The accumulator increments by delta time each frame the condition is true, and resets if the condition breaks before threshold. A transition only fires after sustained presence — typically 0.1 to 0.2 seconds. This eliminates single-frame jitter while still responding promptly to genuine, sustained environmental changes.</div>
           </div>
         </div>
 
-        <div class="doc-block" id="doc-bp">
-          <div class="doc-block-title">Blueprint Approach &amp; Tradeoffs <span class="tag-small tag-bp">Blueprint</span></div>
+        <div id="d-sk">
+          <div class="doc-sec-title">Stuck Detection &amp; Escape <span class="tag-s tag-cpp">C++ Only</span></div>
+          <p class="doc-p">Even well-tuned avoidance produces deadlock. Two agents approaching head-on with symmetric separation forces stall — each blocked by the other's push. In dense crowds this occurs regularly without dedicated recovery.</p>
+          <p class="doc-p">The system monitors each agent's <strong>displacement over a rolling frame window</strong>. If total movement falls below a minimum threshold over that window, the agent is flagged as stuck. A perpendicular escape vector is injected at high priority weight to sidestep the blockage.</p>
+          <div class="math-box">
+            <div class="math-lbl">Displacement Check</div>
+            <div class="math-f">displacement = | P_now − P_N_frames_ago |</div>
+            <div class="math-note">If displacement stays below minMoveThreshold for the full sample window, escape mode activates. The escape vector is the right-perpendicular of the goal direction — a sidestep that breaks symmetry without abandoning the goal. Once displacement recovers on a subsequent window, escape mode clears and normal avoidance resumes automatically.</div>
+          </div>
+        </div>
+
+        <div id="d-bp">
+          <div class="doc-sec-title">Blueprint Approach &amp; Tradeoffs <span class="tag-s tag-bp">Blueprint</span></div>
           <p class="doc-p">The Blueprint implementation applies the same conceptual force model — goal, separation, alignment — but without the spatial grid, probe system, anticipatory prediction, or multi-state machine. Each agent runs a direct overlap query to find neighbors and immediately computes a response from current positions.</p>
-          <p class="doc-p">This works well when crowds are sparse enough that agents rarely end up fully surrounded, and when small amounts of jitter or occasional stuck behavior are acceptable. As a <strong>rapid prototyping tool</strong> it excels — convincing crowd behavior in minutes, with all parameters directly exposed to designers.</p>
+          <p class="doc-p">This works well when crowds are sparse enough that agents rarely end up fully surrounded, and when small amounts of jitter are acceptable. As a <strong>rapid prototyping tool</strong> it excels — convincing crowd behavior in minutes, all parameters exposed to designers with no code changes.</p>
           <div class="callout">
-            <strong>Workflow recommendation:</strong> Use Blueprint to explore crowd density and feel early. Once you know what you want, port the agents that matter to the C++ system for correctness and performance. Both can coexist in the same scene — Blueprint agents for the background, C++ agents for characters the player actually interacts with.
+            <strong>Recommended workflow:</strong> Use Blueprint to explore crowd density and feel early. Once you know what you want, port the agents that matter to C++ for correctness and performance. Both can coexist — Blueprint agents for background, C++ agents for characters the player actually interacts with.
           </div>
         </div>
 
-      </div>
-    </div>
+      </div><!-- doc-body -->
+    </div><!-- doc-layout -->
   </div>
 </section>
 
 <!-- FOOTER -->
 <footer>
   <div class="wrap">
-    <p>
-      Built by <a href="https://www.linkedin.com/in/hriteshkashyap/" target="_blank">Hritesh Kashyap</a>
-      &nbsp;·&nbsp; Unreal Engine 5 &nbsp;·&nbsp; C++ &amp; Blueprint AI Systems
-    </p>
+    <div class="footer-inner">
+      <p>Built by <a href="https://www.linkedin.com/in/hriteshkashyap/" target="_blank">Hritesh Kashyap</a> &nbsp;·&nbsp; Unreal Engine 5 &nbsp;·&nbsp; C++ &amp; Blueprint AI Systems</p>
+      <span class="footer-ref"></span>
+    </div>
   </div>
 </footer>
 
 <script>
-  function navScrollTo(id) {
+  function go(id) {
     const el = document.getElementById(id);
     if (!el) return;
-    const top = el.getBoundingClientRect().top + window.scrollY - 70;
-    window.scrollTo({ top, behavior: 'smooth' });
+    window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 68, behavior: 'smooth' });
   }
 
-  function docNav(btn, targetId) {
-    document.querySelectorAll('.doc-nav-item').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    const el = document.getElementById(targetId);
+  function dn(btn, id) {
+    document.querySelectorAll('.doc-nav-btn').forEach(b => b.classList.remove('on'));
+    btn.classList.add('on');
+    const el = document.getElementById(id);
     if (!el) return;
-    const top = el.getBoundingClientRect().top + window.scrollY - 90;
-    window.scrollTo({ top, behavior: 'smooth' });
+    window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 88, behavior: 'smooth' });
   }
 
   const obs = new IntersectionObserver(entries => {
-    entries.forEach(e => {
-      if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
-    });
-  }, { threshold: 0.08 });
-  document.querySelectorAll('.fade-up').forEach(el => obs.observe(el));
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('on'); obs.unobserve(e.target); } });
+  }, { threshold: 0.07 });
+  document.querySelectorAll('.fu').forEach(el => obs.observe(el));
 </script>
 </body>
 </html>
